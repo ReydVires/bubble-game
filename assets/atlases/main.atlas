@@ -1,0 +1,124 @@
+images {
+  image: "/assets/images/blank_32.png"
+}
+images {
+  image: "/assets/images/empty.png"
+}
+images {
+  image: "/assets/images/pixel.png"
+}
+images {
+  image: "/assets/images/ui_circle_32.png"
+}
+images {
+  image: "/assets/images/ui_circle_64.png"
+}
+images {
+  image: "/assets/images/ui_diamond_64.png"
+}
+images {
+  image: "/assets/images/ui_square_64.png"
+}
+images {
+  image: "/assets/images/ui_trapezoid_64.png"
+}
+images {
+  image: "/assets/images/ui_triangle_64.png"
+}
+images {
+  image: "/assets/images/trivia_car.png"
+}
+images {
+  image: "/assets/images/trivia_duck.png"
+}
+images {
+  image: "/assets/images/trivia_home.png"
+}
+images {
+  image: "/assets/images/exit_button.png"
+}
+images {
+  image: "/assets/images/level_sign.png"
+}
+images {
+  image: "/assets/images/next_button.png"
+}
+images {
+  image: "/assets/images/trivia_panda.png"
+}
+images {
+  image: "/assets/images/trivia_worm.png"
+}
+images {
+  image: "/assets/images/ui_bottlebubble.png"
+}
+images {
+  image: "/assets/images/ui_circle.png"
+}
+images {
+  image: "/assets/images/ui_diamond.png"
+}
+images {
+  image: "/assets/images/ui_square.png"
+}
+images {
+  image: "/assets/images/ui_trapezoid.png"
+}
+images {
+  image: "/assets/images/ui_triangle.png"
+}
+images {
+  image: "/assets/images/frame_table.png"
+}
+images {
+  image: "/assets/images/circle-jar.png"
+}
+images {
+  image: "/assets/images/diamond-jar.png"
+}
+images {
+  image: "/assets/images/square-jar.png"
+}
+images {
+  image: "/assets/images/trapezoid-jar.png"
+}
+images {
+  image: "/assets/images/triangle-jar.png"
+}
+images {
+  image: "/assets/images/trivia_cat.png"
+}
+images {
+  image: "/assets/images/exit_button_red.png"
+}
+images {
+  image: "/assets/images/gameover_sign.png"
+}
+images {
+  image: "/assets/images/repeat_button.png"
+}
+images {
+  image: "/assets/images/heart.png"
+}
+images {
+  image: "/assets/images/tutz_hand.png"
+}
+images {
+  image: "/assets/images/bubble_chat.png"
+}
+images {
+  image: "/assets/images/qm.png"
+}
+images {
+  image: "/assets/images/trivia_triangle.png"
+}
+images {
+  image: "/assets/images/credit_button.png"
+}
+images {
+  image: "/assets/images/disable-music.png"
+}
+images {
+  image: "/assets/images/enable-music.png"
+}
+extrude_borders: 2

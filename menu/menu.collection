@@ -1,0 +1,14 @@
+name: "menu"
+scale_along_z: 0
+embedded_instances {
+  id: "root"
+  data: "components {\n"
+  "  id: \"menu\"\n"
+  "  component: \"/menu/menu.gui\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"credit\"\n"
+  "  component: \"/menu/credit.gui\"\n"
+  "}\n"
+  ""
+}

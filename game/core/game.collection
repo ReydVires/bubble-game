@@ -1,0 +1,26 @@
+name: "game"
+scale_along_z: 0
+embedded_instances {
+  id: "root"
+  data: "components {\n"
+  "  id: \"ui\"\n"
+  "  component: \"/game/core/game.gui\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"modal\"\n"
+  "  component: \"/game/components/modal/modal.gui\"\n"
+  "}\n"
+  "components {\n"
+  "  id: \"gameover_modal\"\n"
+  "  component: \"/game/components/gameover_modal/gameover_modal.gui\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "system"
+  data: "components {\n"
+  "  id: \"controller\"\n"
+  "  component: \"/game/core/controller.script\"\n"
+  "}\n"
+  ""
+}

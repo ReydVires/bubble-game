@@ -1,0 +1,394 @@
+local global_data = require("game.core.data")
+local druid = require("druid.druid")
+local util = require("game.util.util")
+
+local event = require("druid.event")
+local timer = require("druid.extended.timer")
+
+local BUBBLE_TYPES = global_data.bubble_types
+local BUBBLE_IDENTIFIER_ASSET = global_data.bubble_identifier_assets
+
+local MSG_GAMEOVER = "gameover"
+local MSG_SHOW_MODAL = "show_modal"
+
+local life = global_data.life
+
+local bubble_list = {}
+
+local requester_bubble = util.clone_table(global_data.requester_bubble)
+local requester_asset = util.clone_table(global_data.requester_bubble_asset)
+
+local function on_hover_pick_zone(self, is_pick_zone, target_node)
+	local target_alpha = is_pick_zone and 1.5 or 1
+	gui.animate(self.zone, "color.w", target_alpha, gui.EASING_OUTSINE, 0.3)
+
+	if is_pick_zone then
+		gui.animate(target_node, "rotation.z", -0.5, gui.EASING_OUTSINE, 0.15)
+	else
+		gui.animate(target_node, "rotation.z", 0, gui.EASING_OUTSINE, 0.3)
+	end
+end
+
+local function on_drag_start(self, node, dx, dy, x, y, touch)
+	local position_x = gui.get(node, "position.x")
+	local position_y = gui.get(node, "position.y")
+	gui.set(node, "position.x", position_x + dx)
+	gui.set(node, "position.y", position_y + dy)
+
+	local is_pick_zone = gui.pick_node(self.zone, touch.x, touch.y)
+	on_hover_pick_zone(self, is_pick_zone, node)
+end
+
+local function on_drop_to_zone(self)
+	sound.play("main:/sound#water_blub", { speed = math.random() + 0.5 })
+	gui.set_scale(self.zone, vmath.vector3(1.2))
+	gui.animate(self.zone, "scale", vmath.vector3(1), gui.EASING_OUTBACK, 0.3)
+end
+
+local function on_drag_end(self, node, init_pos, x, y, touch, type, modifier)
+	gui.animate(node, "position", init_pos, gui.EASING_OUTBACK, 0.3, 0, function ()
+		msg.post("#", "on_drag_animate_end")
+	end)
+
+	local is_pick_zone = gui.pick_node(self.zone, touch.x, touch.y)
+	if is_pick_zone then
+		msg.post("#", "on_drag_end", {
+			type = type,
+			modifier = modifier
+		})
+
+		on_drop_to_zone(self)
+	end
+	on_hover_pick_zone(self, false, node)
+end
+
+local function timer_init(self)
+	local timer_node = gui.get_node("timer_text")
+
+	local time = global_data.level + 1 >= 5 and 10 or 5
+	local on_cycle_end = event.create()
+
+	gui.set_text(timer_node, time > 9 and ("00:%s"):format(time) or ("00:0%s"):format(time))
+	gui.set_scale(timer_node, vmath.vector3(2.25))
+	gui.set_enabled(timer_node, true)
+
+	gui.animate(timer_node, gui.PROP_SCALE, vmath.vector3(1), gui.EASING_INBACK, 1.5, 0.5, function ()
+		self.timer = self.druid:new(timer, "timer_text")
+		self.timer:set_interval(time, 0)
+		self.timer.on_timer_end:subscribe(function()
+			if life > 0 and #requester_bubble[global_data.level + 1] > 0 then
+				life = life - 1
+				gui.set_text(
+					gui.get_node("life_text"),
+					string.format("%sx", life)
+				)
+				msg.post("#", "heart_animate")
+
+				time = global_data.level + 1 >= 5 and 10 or 5
+				self.timer:set_interval(time, 0)
+				on_cycle_end:trigger()
+			end
+		end)
+		self.timer.on_tick:subscribe(function ()
+			if not (life <= 0 or #requester_bubble[global_data.level + 1] <= 0) then
+				sound.play("main:/sound#clock_tick", { speed = math.random() + 0.85 })
+			end
+		end)
+	end)
+end
+
+local function bubbles_init(self)
+	local bubbles_position_type = util.shuffle_table(BUBBLE_TYPES)
+
+	self.counter_bubble = {}
+
+	self.zone = gui.get_node("zone_box")
+
+	self.bubble_item_1 = self.druid:new_drag("bubble_box_1", function (_, dx, dy, x, y, touch)
+		self.bubble_item_1.is_grab = true
+		on_drag_start(self, self.bubble_item_1.node, dx, dy, x, y, touch)
+	end)
+	self.bubble_item_1.start_position = gui.get_position(self.bubble_item_1.node)
+	self.bubble_item_1.type = bubbles_position_type[1]
+	self.bubble_item_1.on_drag_end:subscribe(function (_, x, y, touch)
+		on_drag_end(
+			self, self.bubble_item_1.node, self.bubble_item_1.start_position, x, y, touch, bubbles_position_type[1])
+		self.bubble_item_1.is_grab = false
+	end)
+	self.bubble_item_1.on_touch_start:subscribe(function ()
+		self.bubble_item_1.is_grab = true
+	end)
+	table.insert(bubble_list, self.bubble_item_1)
+
+	self.bubble_item_2 = self.druid:new_drag("bubble_box_2", function (_, dx, dy, x, y, touch)
+		self.bubble_item_2.is_grab = true
+		on_drag_start(self, self.bubble_item_2.node, dx, dy, x, y, touch)
+	end)
+	self.bubble_item_2.start_position = gui.get_position(self.bubble_item_2.node)
+	self.bubble_item_2.type = bubbles_position_type[2]
+	self.bubble_item_2.on_drag_end:subscribe(function (_, x, y, touch)
+		on_drag_end(
+			self, self.bubble_item_2.node, self.bubble_item_2.start_position, x, y, touch, bubbles_position_type[2])
+		self.bubble_item_2.is_grab = false
+	end)
+	self.bubble_item_2.on_touch_start:subscribe(function ()
+		self.bubble_item_2.is_grab = true
+	end)
+	table.insert(bubble_list, self.bubble_item_2)
+
+	self.bubble_item_3 = self.druid:new_drag("bubble_box_3", function (_, dx, dy, x, y, touch)
+		self.bubble_item_3.is_grab = true
+		on_drag_start(self, self.bubble_item_3.node, dx, dy, x, y, touch)
+	end)
+	self.bubble_item_3.start_position = gui.get_position(self.bubble_item_3.node)
+	self.bubble_item_3.type = bubbles_position_type[3]
+	self.bubble_item_3.on_drag_end:subscribe(function (_, x, y, touch)
+		on_drag_end(
+			self, self.bubble_item_3.node, self.bubble_item_3.start_position, x, y, touch, bubbles_position_type[3])
+		self.bubble_item_3.is_grab = false
+	end)
+	self.bubble_item_3.on_touch_start:subscribe(function ()
+		self.bubble_item_3.is_grab = true
+	end)
+	table.insert(bubble_list, self.bubble_item_3)
+
+	self.bubble_item_4 = self.druid:new_drag("bubble_box_4", function (_, dx, dy, x, y, touch)
+		self.bubble_item_4.is_grab = true
+		on_drag_start(self, self.bubble_item_4.node, dx, dy, x, y, touch)
+	end)
+	self.bubble_item_4.start_position = gui.get_position(self.bubble_item_4.node)
+	self.bubble_item_4.type = bubbles_position_type[4]
+	self.bubble_item_4.on_drag_end:subscribe(function (_, x, y, touch)
+		on_drag_end(
+			self, self.bubble_item_4.node, self.bubble_item_4.start_position, x, y, touch, bubbles_position_type[4])
+		self.bubble_item_4.is_grab = false
+	end)
+	self.bubble_item_4.on_touch_start:subscribe(function ()
+		self.bubble_item_4.is_grab = true
+	end)
+	table.insert(bubble_list, self.bubble_item_4)
+
+	self.bubble_item_5 = self.druid:new_drag("bubble_box_5", function (_, dx, dy, x, y, touch)
+		self.bubble_item_5.is_grab = true
+		on_drag_start(self, self.bubble_item_5.node, dx, dy, x, y, touch)
+	end)
+	self.bubble_item_5.start_position = gui.get_position(self.bubble_item_5.node)
+	self.bubble_item_5.type = bubbles_position_type[5]
+	self.bubble_item_5.on_drag_end:subscribe(function (_, x, y, touch)
+		on_drag_end(
+			self, self.bubble_item_5.node, self.bubble_item_5.start_position, x, y, touch, bubbles_position_type[5])
+		self.bubble_item_5.is_grab = false
+	end)
+	self.bubble_item_5.on_touch_start:subscribe(function ()
+		self.bubble_item_5.is_grab = true
+	end)
+	table.insert(bubble_list, self.bubble_item_5)
+
+	for key, value in pairs(bubble_list) do
+		gui.play_flipbook(value.node, BUBBLE_IDENTIFIER_ASSET[value.type])
+	end
+end
+
+local function tutorial_init(self)
+	local cursor_node = gui.get_node("cursor")
+
+	local to_pos
+	for _, bubble in pairs(bubble_list) do
+		if bubble.type == "triangle" then
+			to_pos = gui.get_position(bubble.node)
+			break
+		end
+	end
+	to_pos.y = -195
+
+	gui.set_scale(cursor_node, vmath.vector3(1.2))
+	local request_target_pos = gui.get_position(gui.get_node("request_box"))
+	request_target_pos.y = request_target_pos.y + 48
+	request_target_pos.x = request_target_pos.x + 128
+	gui.animate(cursor_node, "position", request_target_pos, gui.EASING_LINEAR, 1, 0.5, function ()
+		gui.animate(cursor_node, "position", to_pos, gui.EASING_LINEAR, 1, 2, function ()
+			gui.animate(cursor_node, "scale", vmath.vector3(0.9), gui.EASING_OUTBACK, 0.5, 0.75)
+
+			local target_jug_pos = gui.get_position(gui.get_node("zone_box"))
+			target_jug_pos.y = target_jug_pos.y - 32
+			gui.animate(cursor_node, "position", target_jug_pos, gui.EASING_LINEAR, 1, 2, function ()
+				gui.animate(cursor_node, "scale", vmath.vector3(1.2), gui.EASING_OUTBACK, 0.5)
+				gui.animate(cursor_node, gui.PROP_COLOR, vmath.vector4(1, 1, 1, 0), gui.EASING_LINEAR, 0.25, 2)
+			end)
+		end)
+	end)
+end
+
+local function level_init(self)
+	local curr_level = global_data.level + 1
+	if curr_level == 1 then
+		tutorial_init(self)
+	end
+
+	if curr_level >= 3 and curr_level <= 5 then
+		timer_init(self)
+	end
+
+	if curr_level == 4 then
+		-- msg.post("/system#controller", "delay_hide_request_box")
+		local request_node = gui.get_node("request_box")
+		gui.animate(
+			gui.get_node("request_box"),
+			gui.PROP_COLOR,
+			vmath.vector4(1, 1, 1, 0),
+			gui.EASING_LINEAR,
+			4,
+			0,
+			function ()
+				gui.play_flipbook(request_node, "qm")
+				gui.set_color(request_node, vmath.vector4(1))
+			end
+		)
+	end
+end
+
+local function shuffle_bubble_jug (self, is_advance)
+	local pos_list = {}
+	for i, item in pairs(bubble_list) do
+		if is_advance then
+			if not item.is_grab then
+				table.insert(pos_list, item.start_position)
+			end
+		else
+			table.insert(pos_list, item.start_position)
+		end
+	end
+
+	local n = #pos_list
+	for i = n, 2, -1 do
+		local j = math.random(i)
+		pos_list[i], pos_list[j] = pos_list[j], pos_list[i]
+	end
+
+	for i, item in pairs(pos_list) do
+		bubble_list[i].start_position = item
+		gui.set_position(bubble_list[i].node, item)
+	end
+end
+
+function init(self)
+	self.druid = druid.new(self)
+
+	-- Reset state
+	if requester_bubble[global_data.level + 1] == nil then
+		-- global_data.level = 0
+		msg.post("game:/system#controller", "title")
+		return
+	end
+
+	self.counter = 0
+
+	gui.set_enabled(gui.get_node("timer_text"), false)
+	gui.set_enabled(gui.get_node("counter_text"), false)
+
+	gui.set_text(
+		gui.get_node("life_text"),
+		string.format("%sx", life)
+	)
+
+	local level_text_node = gui.get_node("level_text")
+	gui.set_text(
+		level_text_node,
+		string.format("Level %s", global_data.level + 1)
+	)
+	gui.animate(level_text_node, "position.y", 240, gui.EASING_OUTBOUNCE, 1)
+
+	gui.play_flipbook(gui.get_node("request_box"), requester_asset[global_data.level + 1])
+
+	bubbles_init(self)
+	level_init(self)
+end
+
+function update(self, dt)
+	self.druid:update(dt)
+
+	if life <= 0 then
+		msg.post("game:/system#controller", MSG_GAMEOVER)
+		gui.set_enabled(gui.get_node("timer_text"), false) -- Disable timer
+		gui.set_enabled(gui.get_node("bubble_container"), false) -- Bubbles
+		-- sound.play("main:/sound#time_limit_blub") -- error
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	self.druid:on_message(message_id, message, sender)
+
+	if message_id == hash("on_drag_animate_end") then
+		local curr_level = global_data.level + 1
+		if curr_level >= 3 and curr_level <= 6 then
+			shuffle_bubble_jug(self)
+		end
+	end
+
+	if message_id == hash("on_drag_end") then
+		local type = message.type
+		local modifier = message.modifier
+
+		local is_found = util.check_includes_and_remove(self, requester_bubble[global_data.level + 1], type)
+		if not is_found then
+			life = life - 1
+			gui.set_text(gui.get_node("life_text"), string.format("%sx", life))
+			msg.post("#", "heart_animate")
+		else
+			self.counter = self.counter + (modifier or 1)
+
+			msg.post("#", "set_bubble_selected", { type = type, point = 1 })
+
+			local is_no_level_left = #requester_bubble[global_data.level + 1] == 0
+			if is_no_level_left then
+				msg.post("game:/system#controller", MSG_SHOW_MODAL)
+				gui.set_enabled(gui.get_node("timer_text"), false) -- Disable timer
+				gui.set_enabled(gui.get_node("bubble_container"), false) -- Bubbles
+			end
+		end
+		-- gui.set_text(gui.get_node("counter_text"), string.format("Counter: %s", self.counter))
+	end
+
+	if message_id == hash("heart_animate") then
+		local node = gui.get_node("heart_box")
+		local duration = 0.35
+		local angle = 35
+		gui.animate(node, gui.PROP_ROTATION, vmath.quat_rotation_z(math.rad(angle)), gui.EASING_INOUTSINE, duration / 2, 0, function()
+			-- Animate back to the opposite angle
+			gui.animate(node, gui.PROP_ROTATION, vmath.quat_rotation_z(math.rad(-angle)), gui.EASING_INOUTSINE, duration / 2, 0, function()
+				-- Animate back to center (optional, can loop if needed)
+				gui.animate(node, gui.PROP_ROTATION, vmath.quat_rotation_z(0), gui.EASING_INOUTSINE, duration / 2)
+			end)
+		end)
+		gui.animate(node, gui.PROP_SCALE, vmath.vector3(2), gui.EASING_LINEAR, 0.4, 0, nil, gui.PLAYBACK_ONCE_PINGPONG)
+	end
+
+	if message_id == hash("call_per_sec") then
+		shuffle_bubble_jug(self, true)
+	end
+
+	if message_id == hash("hide_request_box") then
+		gui.set_enabled(gui.get_node("request_box"), false)
+	end
+
+	if message_id == hash("set_bubble_selected") then
+		local curr_data = self.counter_bubble[message.type]
+		if curr_data ~= nil then
+			self.counter_bubble[message.type] = curr_data + message.point
+		else
+			self.counter_bubble[message.type] = message.point
+		end
+
+		local node = gui.get_node(string.format("%s_text", message.type))
+		gui.animate(node, gui.PROP_SCALE, vmath.vector3(1.2), gui.EASING_LINEAR, 0.5, 0, nil, gui.PLAYBACK_ONCE_PINGPONG)
+		gui.set_text(node, string.format("%sx", self.counter_bubble[message.type]))
+	end
+end
+
+function on_input(self, action_id, action)
+	return self.druid:on_input(action_id, action)
+end
+
+function final(self)
+	self.druid:final()
+end

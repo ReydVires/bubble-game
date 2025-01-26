@@ -1,0 +1,10 @@
+name: "gameover"
+scale_along_z: 0
+embedded_instances {
+  id: "root"
+  data: "components {\n"
+  "  id: \"gameover\"\n"
+  "  component: \"/game/components/gameover/gameover.gui\"\n"
+  "}\n"
+  ""
+}

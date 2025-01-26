@@ -1,0 +1,476 @@
+script: "/game/core/game.gui_script"
+fonts {
+  name: "text_32_bold"
+  font: "/assets/fonts/text_32_bold.font"
+}
+fonts {
+  name: "glow_text_32"
+  font: "/assets/fonts/glow_text_32.font"
+}
+fonts {
+  name: "glow_text_48"
+  font: "/assets/fonts/glow_text_48.font"
+}
+textures {
+  name: "main"
+  texture: "/assets/atlases/main.atlas"
+}
+nodes {
+  position {
+    x: 320.0
+    y: 240.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    y: 220.0
+  }
+  size {
+    x: 200.0
+    y: 48.0
+  }
+  type: TYPE_TEXT
+  text: "Counter: 0"
+  font: "text_32_bold"
+  id: "counter_text"
+  pivot: PIVOT_N
+  parent: "container"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: -300.0
+    y: 220.0
+  }
+  size {
+    x: 200.0
+    y: 48.0
+  }
+  type: TYPE_TEXT
+  text: "0x"
+  font: "glow_text_32"
+  id: "life_text"
+  yanchor: YANCHOR_TOP
+  pivot: PIVOT_NW
+  parent: "container"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 58.0
+    y: -19.0
+  }
+  scale {
+    x: 1.2
+    y: 1.2
+  }
+  type: TYPE_BOX
+  texture: "main/heart"
+  id: "heart_box"
+  yanchor: YANCHOR_TOP
+  parent: "life_text"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 300.0
+    y: 220.0
+  }
+  size {
+    x: 200.0
+    y: 45.0
+  }
+  type: TYPE_TEXT
+  text: "Timer"
+  font: "glow_text_32"
+  id: "timer_text"
+  yanchor: YANCHOR_TOP
+  pivot: PIVOT_NE
+  parent: "container"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: 300.0
+  }
+  scale {
+    x: 0.9
+    y: 0.9
+  }
+  size {
+    x: 200.0
+    y: 48.0
+  }
+  type: TYPE_TEXT
+  text: "Level"
+  font: "glow_text_48"
+  id: "level_text"
+  yanchor: YANCHOR_TOP
+  pivot: PIVOT_N
+  parent: "container"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 128.0
+    y: 81.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "request_container"
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: -8.0
+    y: -8.0
+  }
+  scale {
+    x: 1.2
+    y: 1.2
+  }
+  type: TYPE_BOX
+  texture: "main/bubble_chat"
+  id: "chat_box"
+  parent: "request_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_BOX
+  texture: "main/trivia_car"
+  id: "request_box"
+  parent: "request_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 215.0
+    y: -40.0
+  }
+  type: TYPE_BOX
+  texture: "main/ui_bottlebubble"
+  id: "zone_box"
+  parent: "container"
+  inherit_alpha: true
+  slice9 {
+    x: 8.0
+    y: 8.0
+    z: 8.0
+    w: 8.0
+  }
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    y: -240.0
+  }
+  type: TYPE_BOX
+  texture: "main/frame_table"
+  id: "table_bo"
+  yanchor: YANCHOR_BOTTOM
+  pivot: PIVOT_S
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: -260.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "counter_container"
+  xanchor: XANCHOR_LEFT
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    y: 135.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "square_box"
+  parent: "counter_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_BOX
+  texture: "main/square-jar"
+  id: "square_item"
+  pivot: PIVOT_E
+  parent: "square_box"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 6.0
+  }
+  scale {
+    x: 0.8
+    y: 0.8
+  }
+  size {
+    x: 100.0
+    y: 36.0
+  }
+  type: TYPE_TEXT
+  text: "0x"
+  font: "glow_text_32"
+  id: "square_text"
+  pivot: PIVOT_W
+  parent: "square_box"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: 93.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "circle_box"
+  parent: "counter_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_BOX
+  texture: "main/circle-jar"
+  id: "circle_item"
+  pivot: PIVOT_E
+  parent: "circle_box"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 6.0
+  }
+  scale {
+    x: 0.8
+    y: 0.8
+  }
+  size {
+    x: 100.0
+    y: 36.0
+  }
+  type: TYPE_TEXT
+  text: "0x"
+  font: "glow_text_32"
+  id: "circle_text"
+  pivot: PIVOT_W
+  parent: "circle_box"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: 51.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "trapezoid_box"
+  parent: "counter_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_BOX
+  texture: "main/trapezoid-jar"
+  id: "trapezoid_item"
+  pivot: PIVOT_E
+  parent: "trapezoid_box"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 6.0
+  }
+  scale {
+    x: 0.8
+    y: 0.8
+  }
+  size {
+    x: 100.0
+    y: 36.0
+  }
+  type: TYPE_TEXT
+  text: "0x"
+  font: "glow_text_32"
+  id: "trapezoid_text"
+  pivot: PIVOT_W
+  parent: "trapezoid_box"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: 9.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "triangle_box"
+  parent: "counter_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_BOX
+  texture: "main/triangle-jar"
+  id: "triangle_item"
+  pivot: PIVOT_E
+  parent: "triangle_box"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 6.0
+  }
+  scale {
+    x: 0.8
+    y: 0.8
+  }
+  size {
+    x: 100.0
+    y: 36.0
+  }
+  type: TYPE_TEXT
+  text: "0x"
+  font: "glow_text_32"
+  id: "triangle_text"
+  pivot: PIVOT_W
+  parent: "triangle_box"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: -33.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "diamond_box"
+  parent: "counter_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_BOX
+  texture: "main/diamond-jar"
+  id: "diamond_item"
+  pivot: PIVOT_E
+  parent: "diamond_box"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 6.0
+  }
+  scale {
+    x: 0.8
+    y: 0.8
+  }
+  size {
+    x: 100.0
+    y: 36.0
+  }
+  type: TYPE_TEXT
+  text: "0x"
+  font: "glow_text_32"
+  id: "diamond_text"
+  pivot: PIVOT_W
+  parent: "diamond_box"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    y: -160.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "bubble_container"
+  yanchor: YANCHOR_BOTTOM
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 140.0
+  }
+  type: TYPE_BOX
+  texture: "main/ui_triangle"
+  id: "bubble_box_5"
+  parent: "bubble_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 70.0
+  }
+  type: TYPE_BOX
+  texture: "main/ui_trapezoid"
+  id: "bubble_box_4"
+  parent: "bubble_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_BOX
+  texture: "main/ui_square"
+  id: "bubble_box_3"
+  parent: "bubble_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: -70.0
+  }
+  type: TYPE_BOX
+  texture: "main/ui_diamond"
+  id: "bubble_box_2"
+  parent: "bubble_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: -140.0
+  }
+  type: TYPE_BOX
+  texture: "main/ui_circle"
+  id: "bubble_box_1"
+  parent: "bubble_container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 320.0
+    y: -260.0
+  }
+  type: TYPE_BOX
+  texture: "main/tutz_hand"
+  id: "cursor"
+  pivot: PIVOT_W
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

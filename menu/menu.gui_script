@@ -1,0 +1,44 @@
+local druid = require("druid.druid")
+
+local is_on_audio = true
+
+function init(self)
+	sound.play("main:/sound#bgm_main", { gain = 0.75 })
+
+	self.druid = druid.new(self)
+	self.play_button = self.druid:new_button("play_button", function ()
+		msg.post("main:/system#controller", "show_game")
+	end)
+	self.credit_button = self.druid:new_button("credit_button", function ()
+		msg.post("/root#credit", "show")
+	end)
+	self.music_button = self.druid:new_button("music_button", function ()
+		is_on_audio = not is_on_audio
+		if is_on_audio then
+			sound.play("main:/sound#bgm_main", { gain = 0.75 })
+		else
+			sound.stop("main:/sound#bgm_main")
+		end
+
+		local node = gui.get_node("music_button")
+		gui.play_flipbook(node, is_on_audio and "enable-music" or "disable-music")
+	end)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("show") then
+		gui.set_enabled(gui.get_node("container"), true)
+	end
+
+	if message_id == hash("hide") then
+		gui.set_enabled(gui.get_node("container"), false)
+	end
+end
+
+function on_input(self, action_id, action)
+	return self.druid:on_input(action_id, action)
+end
+
+function final(self)
+	self.druid:final()
+end

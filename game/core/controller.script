@@ -1,0 +1,62 @@
+local global_data = require("game.core.data")
+
+local MSG_SHOW_MENU = "show_menu"
+local MSG_RELOAD_LEVEL = "reload_level"
+
+local HASH_GAMEOVER = hash("gameover")
+local HASH_NEXT_LEVEL = hash("next_level")
+local HASH_RETRY_LEVEL = hash("retry_level")
+local HASH_SHOW_MODAL = hash("show_modal")
+local HASH_TITLE = hash("title")
+
+local HASH_HIDE_BOX = hash("delay_hide_request_box")
+
+function init(self)
+	pprint(("Init game level: %s"):format(global_data.level))
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == HASH_TITLE then
+		global_data.level = 0
+		global_data.life = 3
+		msg.post("main:/system#controller", MSG_SHOW_MENU)
+	end
+
+	if message_id == HASH_GAMEOVER then
+		global_data.life = 3
+		msg.post("game:/root#gameover_modal", "show")
+	end
+
+	if message_id == HASH_SHOW_MODAL then
+		msg.post("game:/root#modal", "show")
+	end
+
+	if message_id == HASH_NEXT_LEVEL then
+		msg.post("main:/system#controller", MSG_RELOAD_LEVEL, { is_next_level = true })
+	end
+
+	if message_id == HASH_RETRY_LEVEL then
+		msg.post("main:/system#controller", MSG_RELOAD_LEVEL, { is_next_level = false })
+	end
+
+	if message_id == HASH_HIDE_BOX then
+		timer.delay(message.time or 2, false, function ()
+			msg.post("/root#ui", "hide_request_box")
+		end)
+	end
+
+	if message_id == hash("active_timer") then
+		if self.timer_id == nil then
+			self.timer_id = timer.delay( 1, true, function ()
+				msg.post("/root#ui", "call_per_sec")
+			end)
+		end
+	end
+
+	if message_id == hash("deactive_timer") then
+		if self.timer_id ~= nil then
+			timer.cancel(self.timer_id)
+			self.timer_id = nil
+		end
+	end
+end

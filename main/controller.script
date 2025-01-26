@@ -1,0 +1,50 @@
+local global_data = require("game.core.data")
+
+---@class scene.main
+---@field reload boolean
+
+local HASH_SHOW_GAME = hash("show_game")
+local HASH_SHOW_MENU = hash("show_menu")
+local HASH_RELOAD_LEVEL = hash("reload_level")
+
+local HASH_PROXY_LOADED = hash("proxy_loaded")
+local HASH_PROXY_UNLOADED = hash("proxy_unloaded")
+
+---@param self scene.main
+function init(self)
+	self.reload = false
+	msg.post("scene#menu_proxy", "load")
+	msg.post("@render:", "use_fixed_fit_projection", { near = -1, far = 1 })
+	msg.post("@render:", "clear_color", {
+		color = vmath.vector4(26/255.0, 188/255.0, 156/255.0, 1.0) -- #1abc9c
+	})
+	math.randomseed(os.time())
+end
+
+---@param self scene.main
+function on_message(self, message_id, message, sender)
+	if message_id == HASH_SHOW_GAME then
+		msg.post("scene#menu_proxy", "unload")
+		msg.post("scene#game_proxy", "load")
+	elseif message_id == HASH_SHOW_MENU then
+		msg.post("scene#game_proxy", "unload")
+		msg.post("scene#menu_proxy", "load")
+	elseif message_id == HASH_RELOAD_LEVEL then 
+		msg.post("scene#game_proxy", "unload")
+		self.reload = true
+		if message.is_next_level then
+			local level = global_data.level + 1
+			pprint(("Reload then new level: %s"):format(level))
+			global_data.level = level
+		end
+	elseif message_id == HASH_PROXY_LOADED then
+		msg.post(sender, "enable")
+		msg.post(sender, "acquire_input_focus")
+	elseif message_id == HASH_PROXY_UNLOADED then
+		if self.reload then
+			self.reload = false
+			msg.post("scene#game_proxy", "load")
+			msg.post(sender, "release_input_focus")
+		end
+	end
+end
