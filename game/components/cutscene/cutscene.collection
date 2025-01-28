@@ -1,0 +1,10 @@
+name: "cutscene"
+scale_along_z: 0
+embedded_instances {
+  id: "root"
+  data: "components {\n"
+  "  id: \"cutscene\"\n"
+  "  component: \"/game/components/cutscene/cutscene.gui\"\n"
+  "}\n"
+  ""
+}

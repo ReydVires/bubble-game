@@ -121,4 +121,41 @@ images {
 images {
   image: "/assets/images/enable-music.png"
 }
+images {
+  image: "/assets/images/ui_bottlebubble_empty.png"
+}
+images {
+  image: "/assets/images/ui_bottlebubble_half.png"
+}
+images {
+  image: "/assets/images/ui_wand.png"
+  pivot_y: 0.3
+}
+images {
+  image: "/assets/images/credit_sign.png"
+}
+images {
+  image: "/assets/images/play_button.png"
+}
+images {
+  image: "/assets/images/logo.png"
+}
+images {
+  image: "/assets/images/title.png"
+}
+images {
+  image: "/assets/images/background.png"
+}
+images {
+  image: "/assets/images/monster_happy.png"
+}
+images {
+  image: "/assets/images/monster_netral.png"
+}
+images {
+  image: "/assets/images/monster_angry.png"
+}
+images {
+  image: "/assets/images/frame_ui.png"
+}
 extrude_borders: 2

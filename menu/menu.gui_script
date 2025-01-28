@@ -3,11 +3,12 @@ local druid = require("druid.druid")
 local is_on_audio = true
 
 function init(self)
+	sound.stop("main:/sound#bgm_main")
 	sound.play("main:/sound#bgm_main", { gain = 0.75 })
 
 	self.druid = druid.new(self)
 	self.play_button = self.druid:new_button("play_button", function ()
-		msg.post("main:/system#controller", "show_game")
+		msg.post("main:/system#controller", "show_cutscene")
 	end)
 	self.credit_button = self.druid:new_button("credit_button", function ()
 		msg.post("/root#credit", "show")

@@ -19,15 +19,16 @@ nodes {
   size_mode: SIZE_MODE_AUTO
 }
 nodes {
-  position {
-    y: 28.0
-  }
-  size {
-    x: 256.0
-    y: 256.0
-  }
   type: TYPE_BOX
-  texture: "main/blank_32"
+  texture: "main/title"
+  id: "bg"
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  type: TYPE_BOX
+  texture: "main/credit_sign"
   id: "credit_panel"
   parent: "container"
   inherit_alpha: true
@@ -37,34 +38,15 @@ nodes {
     z: 12.0
     w: 12.0
   }
-}
-nodes {
-  size {
-    x: 200.0
-    y: 100.0
-  }
-  color {
-    x: 0.102
-    y: 0.102
-    z: 0.102
-  }
-  type: TYPE_TEXT
-  text: "Credit here!"
-  font: "glow_text_32"
-  id: "credit_text"
-  parent: "credit_panel"
-  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
 }
 nodes {
   position {
-    y: -127.0
-  }
-  size {
-    x: 128.0
-    y: 32.0
+    x: 170.0
+    y: 165.0
   }
   type: TYPE_BOX
-  texture: "main/blank_32"
+  texture: "main/exit_button"
   id: "back_button"
   parent: "container"
   inherit_alpha: true
@@ -74,6 +56,7 @@ nodes {
     z: 12.0
     w: 4.0
   }
+  size_mode: SIZE_MODE_AUTO
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT

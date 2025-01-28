@@ -27,6 +27,14 @@ nodes {
   size_mode: SIZE_MODE_AUTO
 }
 nodes {
+  type: TYPE_BOX
+  texture: "main/background"
+  id: "bg"
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
   position {
     y: 220.0
   }
@@ -118,6 +126,28 @@ nodes {
 }
 nodes {
   position {
+    y: 32.0
+  }
+  type: TYPE_BOX
+  texture: "main/empty"
+  id: "monster_frame"
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    y: -88.0
+  }
+  type: TYPE_BOX
+  texture: "main/monster_netral"
+  id: "monster_body"
+  parent: "monster_frame"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
     x: 128.0
     y: 81.0
   }
@@ -158,7 +188,7 @@ nodes {
     y: -40.0
   }
   type: TYPE_BOX
-  texture: "main/ui_bottlebubble"
+  texture: "main/ui_bottlebubble_empty"
   id: "zone_box"
   parent: "container"
   inherit_alpha: true
@@ -176,7 +206,7 @@ nodes {
   }
   type: TYPE_BOX
   texture: "main/frame_table"
-  id: "table_bo"
+  id: "table_box"
   yanchor: YANCHOR_BOTTOM
   pivot: PIVOT_S
   parent: "container"
@@ -468,6 +498,18 @@ nodes {
   texture: "main/tutz_hand"
   id: "cursor"
   pivot: PIVOT_W
+  parent: "container"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 275.0
+    y: 20.0
+  }
+  type: TYPE_BOX
+  texture: "main/ui_wand"
+  id: "wand_box"
   parent: "container"
   inherit_alpha: true
   size_mode: SIZE_MODE_AUTO
