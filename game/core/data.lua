@@ -2,7 +2,7 @@ local M = {}
 
 M.life = 3
 
-M.level = 4 -- +1
+M.level = 0 -- +1
 
 M.requester_bubble = {
 	{

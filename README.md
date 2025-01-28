@@ -1,13 +1,12 @@
-# Welcome to Defold
+# Make Me Blub-Blub
 
-This project was created from the "empty" project template.
+#madewithdefold
 
-The settings in ["game.project"](defold://open?path=/game.project) are all the default. A bootstrap empty ["main.collection"](defold://open?path=/main/main.collection) is included.
+This project was created for Global Game Jam 2025
 
-Check out [the documentation pages](https://defold.com/learn) for examples, tutorials, manuals and API docs.
+## Story
+The wanderer was very tired and got lost, so he rested and fell asleep in a tree. Unfortunately, because the tree was near the red monster den, the wanderer was ambushed and taken to their village.
 
-If you run into trouble, help is available in [our forum](https://forum.defold.com).
+Funnily enough, the red monster wanted to release the traveler on one condition. That is, with a "blub-blub show" or "bubble show" to entertain them.
 
-Happy Defolding!
-
----
+## Screenshow
